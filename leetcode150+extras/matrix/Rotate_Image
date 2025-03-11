@@ -1,0 +1,32 @@
+class Solution {
+    public void rotate(int[][] matrix) {
+        int rows=matrix.length;
+        int cols=matrix[0].length;
+        int temp=0;
+        int n=cols-1;
+
+        ///first transpose the matrix
+        for(int i=0;i<rows;i++){
+            for(int j=0;j<=i;j++){
+                if(i!=j){
+                    temp=matrix[i][j];
+                    matrix[i][j]=matrix[j][i];
+                    matrix[j][i]=temp;
+                }
+            }
+        }
+
+        // then swap the columns
+
+        for(int i=0;i<rows;i++){
+            n=cols-1;
+            for(int j=0;j<cols/2;j++){
+                temp=matrix[i][j];
+                matrix[i][j]=matrix[i][n];
+                matrix[i][n]=temp;
+                n--;
+            }
+        }
+    }
+}
+           

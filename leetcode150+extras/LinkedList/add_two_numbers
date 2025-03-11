@@ -1,0 +1,84 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+import java.math.BigInteger; 
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        StringBuilder num1=new StringBuilder();
+        StringBuilder num2=new StringBuilder();
+        ListNode output=new ListNode();
+        while(l1!=null){
+            num1.append(String.valueOf(l1.val));
+            l1=l1.next;
+        }
+        System.out.println(num1);
+        while(l2!=null){
+            num2.append(String.valueOf(l2.val));
+            l2=l2.next;
+        }
+        System.out.println(num2);
+        num1.reverse();
+        num2.reverse();
+        String str1=new String(num1);
+        String str2=new String(num2);
+        BigInteger big1=new BigInteger(str1);
+        BigInteger big2=new BigInteger(str2);
+        BigInteger sum=big1.add(big2);
+        String sumString=String.valueOf(sum);
+        System.out.println(sumString);
+        ListNode node=null;
+        for(int i=0;i<sumString.length();i++){
+            ListNode newNode=new ListNode(Integer.valueOf(Character.getNumericValue(sumString.charAt(i))));
+            newNode.next=node;
+            node=newNode;
+        }
+        return node;
+    }
+}
+
+////////////////////////////BETTER SOLUTION BELOW
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+      ListNode pointer=new ListNode(0);
+      ListNode res=pointer;
+      int num=1;
+      int remainder=0;
+      int sum=0;
+      while(l1!=null || l2!=null || remainder!=0){
+        sum=remainder;
+        if(l1!=null){
+            sum+=l1.val;
+            l1=l1.next;
+        }
+        if(l2!=null){
+            sum+=l2.val;
+            l2=l2.next;
+        }
+        num=sum%10;
+        remainder=sum/10;
+        pointer.next=new ListNode(num);
+        pointer=pointer.next;
+      }
+      return res.next;
+    }
+}

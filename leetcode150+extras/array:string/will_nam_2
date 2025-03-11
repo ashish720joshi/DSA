@@ -1,0 +1,70 @@
+class Solution {
+    public List<Integer> findSubstring(String s, String[] words) {
+        int i=0;
+        int j=0;
+        int o=0;
+        int n=words.length;
+        int m=words[0].length();
+        int k=m*n; //fixed size window
+        Map<String,Integer>wordsMap=new HashMap<>();
+        Map<String,Integer>answerMap=new HashMap<>();
+        String concatenatedString="";
+        List<Integer>answerList=new ArrayList<>();
+        for(int l=0;l<n;l++){
+            if(wordsMap.containsKey(words[l])){
+                wordsMap.put(words[l],wordsMap.get(words[l])+1);
+            }else{
+                wordsMap.putIfAbsent(words[l],1);
+            }
+        }
+        while(j<s.length()){
+           concatenatedString=concatenatedString.concat(String.valueOf(s.charAt(j)));
+            o=concatenatedString.length()-1;
+            if((j+1)%m==0){
+             //   System.out.println("i "+i+" j "+j+" o "+o);
+             System.out.println("concaCC "+concatenatedString);
+             String stringCandidate=concatenatedString.substring(o+1-m,o+1);
+             System.out.println(stringCandidate);
+              if(answerMap.containsKey(stringCandidate)){
+              //  System.out.println("i "+i+" j "+j+" o "+o);
+                answerMap.put(stringCandidate,answerMap.get(stringCandidate)+1);
+                System.out.println(" foo: "+answerMap.get(stringCandidate));
+            }else if(wordsMap.containsKey(stringCandidate)){
+                answerMap.putIfAbsent(stringCandidate,1);
+            }
+                if(!wordsMap.containsKey(concatenatedString.substring(o+1-m,o+1))){
+                    concatenatedString="";
+                    i=j+1;
+                }else{
+                    if(answerMap.get(stringCandidate)>wordsMap.get(stringCandidate)){
+                    answerMap.remove(stringCandidate);
+                    concatenatedString="";
+                    i=j+1;
+                    }
+                }
+            //     System.out.println("after i "+i+" after j "+j+" o"+o);
+            }
+            if(j-i+1==k){
+                answerList.add(i);
+             //   System.out.println(concatenatedString);
+            //    System.out.println("i "+i+" j "+j+" o"+o);
+                String removalString=concatenatedString.substring(0,m);
+             //   System.out.println(removalString);
+                if(answerMap.containsKey(removalString)){
+                    if(answerMap.get(removalString)==1){
+                          answerMap.remove(removalString);
+                    }else{
+                        answerMap.put(removalString,answerMap.get(removalString)-1);
+                    }
+                  
+                   // System.out.println(answerMap);
+                }
+                concatenatedString=concatenatedString.substring(0+m,o+1);
+                System.out.println("ccc "+concatenatedString);
+                i+=m;
+            }
+            j++;
+        }
+        return answerList;
+    }
+}

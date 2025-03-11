@@ -1,0 +1,39 @@
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int[] leftProduct=new int [nums.length];
+        int[] ansProduct=new int [nums.length];
+        int mul=1,j=0;
+        leftProduct[0]=1;
+        for(int i=1;i<leftProduct.length;i++){
+            mul=nums[j++]*mul;
+            leftProduct[i]=mul;
+        }
+        mul=1;
+        for(int i=nums.length-1;i>=0;i--){
+            ansProduct[i]=mul*leftProduct[i];
+            mul=mul*nums[i];
+        }
+        return ansProduct;
+    }
+}
+
+
+///O(1) space complexity and O(N) time complexity
+
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        int[] leftProduct=new int [nums.length];
+        int mul=1,j=0;
+        leftProduct[0]=1;
+        for(int i=1;i<leftProduct.length;i++){
+            mul=nums[j++]*mul;
+            leftProduct[i]=mul;
+        }
+        mul=1;
+        for(int i=nums.length-1;i>=0;i--){
+            leftProduct[i]=leftProduct[i]*mul;
+            mul=mul*nums[i];
+        }
+        return leftProduct;
+    }
+}

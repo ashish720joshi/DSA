@@ -1,0 +1,18 @@
+class Solution {
+    public boolean canJump(int[] nums) {
+        if(nums.length>1){
+        int currPosition=nums.length-2;
+        int goal=nums.length-1;
+        while(currPosition>=0){
+            if(currPosition+nums[currPosition]>=goal){
+                goal=currPosition;
+            }
+            currPosition--;
+        }
+        if(goal==0) return true;
+        return false;
+        }
+        return true;
+    }
+
+}

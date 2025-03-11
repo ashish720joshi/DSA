@@ -1,0 +1,72 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public void flatten(TreeNode root) {
+        Stack<TreeNode>stack=new Stack<>();
+        TreeNode right=null;
+        TreeNode curr=null;
+        preordertraversal(root,stack);
+        while(!stack.empty()){
+            curr=stack.pop();
+            curr.right=right;
+            curr.left=null;
+            right=curr;
+        }
+    }
+    private void preordertraversal(TreeNode root,Stack<TreeNode>stack){
+        if(root==null) return ;
+        stack.push(root);
+        preordertraversal(root.left,stack);
+        preordertraversal(root.right,stack);
+    }
+}
+
+/// O(1) space solution
+
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    
+    public void flatten(TreeNode root) {
+        if(root == null) return;
+        flattenAndGetEndNode(root);
+    }
+
+    private TreeNode flattenAndGetEndNode(TreeNode root){
+        TreeNode leftEndNode=root.left==null?root:flattenAndGetEndNode(root.left);
+        TreeNode rightEndNode=root.right==null?leftEndNode:flattenAndGetEndNode(root.right);
+        leftEndNode.right=root.right;
+        if(root.left!=null){
+            root.right=root.left;
+        }
+        root.left=null;
+        return rightEndNode;
+    }
+}

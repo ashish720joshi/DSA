@@ -1,0 +1,46 @@
+class Solution {
+    public String simplifyPath(String path) {
+        String []pathArray=path.split("/");
+        String simplifiedPath="";
+        Stack<String>stack=new Stack<>();
+        StringBuilder builder=new StringBuilder("/");
+        for(int i=0;i<pathArray.length;i++){
+            if(pathArray[i].equals("..")){
+                if(!stack.isEmpty()) stack.pop();
+            }else if(!pathArray[i].equals("") && !pathArray[i].equals(".") &&
+            !pathArray[i].equals(" ")){
+                stack.push(pathArray[i]);
+            }
+        }
+        stack.forEach(value->{
+               builder.append(value+"/");
+        });
+        simplifiedPath+=builder.toString();
+        return simplifiedPath.length()==1?simplifiedPath:simplifiedPath.substring(0,simplifiedPath.length()-1);
+    }
+}
+
+
+//lesser code
+
+
+class Solution {
+    public String simplifyPath(String path) {
+        String []pathArray=path.split("/");
+        String simplifiedPath="";
+        Stack<String>stack=new Stack<>();
+        StringBuilder builder=new StringBuilder("");
+        for(String str:pathArray){
+            if(str.equals("..")){
+                if(!stack.isEmpty()) stack.pop();
+            }else if(!str.equals("") && !str.equals(" ") && !str.equals(".")){
+                stack.push(str);
+            }
+        }
+
+        while(!stack.isEmpty()){
+            builder.insert(0,"/"+stack.pop());
+        }
+        return builder.length()==0?"/":builder.toString();
+    }
+}

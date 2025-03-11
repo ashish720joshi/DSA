@@ -1,0 +1,61 @@
+// Memoization approach
+
+class Solution {
+    int minCost(int[] height) {
+        int []dp=new int [height.length+1];
+        return minCostJump(height.length-1,height,dp);
+    }
+    
+    int minCostJump(int n,int []height,int []dp){
+        if(n==0) return 0;
+        if(dp[n]!=0) return dp[n];
+        int firstJump=minCostJump(n-1,height,dp)+Math.abs(height[n-1]-height[n]);
+        if(n>1){
+            int secondJump=minCostJump(n-2,height,dp)+Math.abs(height[n-2]-height[n]);
+            return dp[n]=Math.min(firstJump,secondJump);
+        }
+        return dp[n]=firstJump;
+    }
+}
+
+//Tabulation approach
+
+class Solution {
+    int minCost(int[] height) {
+        int n=height.length-1;
+        int []dp=new int [n+1];
+        int firstJump=0;
+        int secondJump=0;
+        for(int i=1;i<height.length;i++){
+               firstJump=dp[i-1]+Math.abs(height[i-1]-height[i]);
+               if(i>1){
+                   secondJump=dp[i-2]+Math.abs(height[i-2]-height[i]);
+                   dp[i]=Math.min(firstJump,secondJump);
+                 }else{
+                    dp[i]=firstJump;
+                 }
+        }
+        return dp[n];
+    }
+}
+
+// Tabulation with space optimization
+
+
+class Solution {
+    int minCost(int[] height) {
+        int prev1=0;
+        int prev2=0;
+        int secondJump=Integer.MAX_VALUE;
+        for(int i=1;i<height.length;i++){
+               int firstJump=prev1+Math.abs(height[i-1]-height[i]);
+               if(i>1){
+                  secondJump=prev2+Math.abs(height[i-2]-height[i]);
+               }
+               int curr=Math.min(firstJump,secondJump);
+               prev2=prev1;
+               prev1=curr;
+        }
+        return prev1;
+    }
+}

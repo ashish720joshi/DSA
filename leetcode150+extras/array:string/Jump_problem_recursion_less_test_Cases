@@ -1,0 +1,23 @@
+class Solution {
+    public boolean canJump(int[] nums) {
+        int i=0;
+        int value=nums[0];
+        boolean canJump=false;
+        return step(i,value,nums.length,nums,canJump);
+    }
+
+    public boolean step(int i,int value,int n,int []nums,boolean canJump){
+        if(i>=n-1){
+           return true;
+        }
+        if(value==0){
+           return false;
+        }
+        if((i+value)<n){
+            canJump=step(i+value,nums[i+value],n,nums,canJump);
+        }else{
+            return true;
+        }
+        return canJump;
+    }
+}
