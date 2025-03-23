@@ -1,0 +1,50 @@
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+
+        // Ensure nums1 is the smaller array for efficient binary search
+        if (m > n) {
+            int[] temp = nums1;
+            nums1 = nums2;
+            nums2 = temp;
+            m = nums1.length;
+            n = nums2.length;
+        }
+
+        int low = 0;
+        int high = m;
+        int leftSize = (m + n + 1) / 2;
+
+        while (low <= high) {
+            int partition1 = (low + high) / 2; // partition of nums1
+            int partition2 = leftSize - partition1; // partition of nums2
+
+            // Edge cases for the partitions
+            int max1 = (partition1 == 0) ? Integer.MIN_VALUE : nums1[partition1 - 1];
+            int min1 = (partition1 == m) ? Integer.MAX_VALUE : nums1[partition1];
+
+            int max2 = (partition2 == 0) ? Integer.MIN_VALUE : nums2[partition2 - 1];
+            int min2 = (partition2 == n) ? Integer.MAX_VALUE : nums2[partition2];
+
+            // Check if we found the correct partition
+            if (max1 <= min2 && max2 <= min1) {
+                // If the combined length is odd, return the max of the left side
+                if ((m + n) % 2 == 1) {
+                    return Math.max(max1, max2);
+                } else {
+                    // If the combined length is even, return the average of the max of the left side
+                    // and the min of the right side
+                    return (Math.max(max1, max2) + Math.min(min1, min2)) / 2.0;
+                }
+            } else if (max1 > min2) {
+                // We are too far right, move the partition1 to the left
+                high = partition1 - 1;
+            } else {
+                // We are too far left, move the partition1 to the right
+                low = partition1 + 1;
+            }
+        }
+        return -1;
+    }
+}
