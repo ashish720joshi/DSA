@@ -1,0 +1,164 @@
+//first marking Os which are connected with border to S and then flipping them
+
+class Solution {
+    public void solve(char[][] board) {
+        int m=board.length;
+        int n=board[0].length;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(board[i][j]=='O' && onBorder(i,j,m,n)){
+                    board[i][j] = 'S';  
+                    bfs(board,i,j,m,n);
+                }
+            }
+        }
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(board[i][j]=='O'){
+                    board[i][j]='X';
+                }else if(board[i][j]=='S'){
+                    board[i][j]='O';
+                }
+            }
+        }
+    }
+
+    public boolean onBorder(int i,int j,int m,int n){
+        return i==0 || i==m-1 || j==0 || j==n-1;
+    }
+
+    public void bfs(char [][]board,int row,int col,int m,int n){
+        Queue<int[]>queue=new LinkedList<>();
+        queue.offer(new int[]{row,col});
+        int [] dr={-1,1,0,0};
+        int [] dc={0,0,-1,1};
+        while(!queue.isEmpty()){
+            int []cell=queue.poll();
+            row=cell[0];
+            col=cell[1];
+            for(int i=0;i<4;i++){
+                int adjX=row+dr[i];
+                int adjY=col+dc[i];
+                if(adjX>=0 && adjX<m && adjY>=0 && adjY<n && board[adjX][adjY]=='O'){
+                    board[adjX][adjY]='S';
+                    queue.offer(new int[]{adjX,adjY});
+                }
+            }         
+        }
+    }
+}
+
+//best optimized solution
+
+class Solution {
+    private static final int[] dr = {-1, 1, 0, 0};
+    private static final int[] dc = {0, 0, -1, 1};
+
+    public void solve(char[][] board) {
+        int m = board.length;
+        if (m == 0) return;  // handle empty board
+        int n = board[0].length;
+
+        // Mark border-connected 'O's
+        for (int i = 0; i < m; i++) {
+            if (board[i][0] == 'O') {
+                board[i][0] = 'S';
+                bfs(board, i, 0, m, n);
+            }
+            if (board[i][n - 1] == 'O') {
+                board[i][n - 1] = 'S';
+                bfs(board, i, n - 1, m, n);
+            }
+        }
+        for (int j = 0; j < n; j++) {
+            if (board[0][j] == 'O') {
+                board[0][j] = 'S';
+                bfs(board, 0, j, m, n);
+            }
+            if (board[m - 1][j] == 'O') {
+                board[m - 1][j] = 'S';
+                bfs(board, m - 1, j, m, n);
+            }
+        }
+
+        // Flip surrounded 'O' to 'X' and revert 'S' back to 'O'
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'O') {
+                    board[i][j] = 'X';
+                } else if (board[i][j] == 'S') {
+                    board[i][j] = 'O';
+                }
+            }
+        }
+    }
+
+    private void bfs(char[][] board, int row, int col, int m, int n) {
+        Queue<int[]> queue = new LinkedList<>();
+        queue.offer(new int[]{row, col});
+
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            int r = cell[0], c = cell[1];
+            for (int i = 0; i < 4; i++) {
+                int adjX = r + dr[i];
+                int adjY = c + dc[i];
+                if (adjX >= 0 && adjX < m && adjY >= 0 && adjY < n && board[adjX][adjY] == 'O') {
+                    board[adjX][adjY] = 'S';
+                    queue.offer(new int[]{adjX, adjY});
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+class Solution {
+    public void solve(char[][] board) {
+        int m=board.length;
+        int n=board[0].length;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(board[i][j]=='O' && onBorder(i,j,m,n)){
+                    bfs(board,i,j,m,n);
+                }
+            }
+        }
+        for(int i=1;i<m-1;i++){
+            for(int j=1;j<n-1;j++){
+                if(board[i][j]=='O'){
+                    board[i][j]='X';
+                }else if(board[i][j]=='S'){
+                    board[i][j]='O';
+                }
+            }
+        }
+    }
+
+    public boolean onBorder(int i,int j,int m,int n){
+        return i==0 || i==m-1 || j==0 || j==n-1;
+    }
+
+    public void bfs(char [][]board,int row,int col,int m,int n){
+        Queue<int[]>queue=new LinkedList<>();
+        queue.offer(new int[]{row,col});
+        int [] dr={-1,1,0,0};
+        int [] dc={0,0,-1,1};
+        while(!queue.isEmpty()){
+            int []cell=queue.poll();
+            row=cell[0];
+            col=cell[1];
+            for(int i=0;i<4;i++){
+                int adjX=row+dr[i];
+                int adjY=col+dc[i];
+                if(adjX>=0 && adjX<m && adjY>=0 && adjY<n && board[adjX][adjY]=='O' && !onBorder(adjX,adjY,m,n)){
+                    board[adjX][adjY]='S';
+                    queue.offer(new int[]{adjX,adjY});
+                }
+            }         
+        }
+    }
+}

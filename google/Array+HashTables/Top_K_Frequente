@@ -1,0 +1,48 @@
+import java.util.*;
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+        int []ans=new int[k];
+        int j=0;
+        Map<Integer,Integer>frequencyMap=new HashMap<>();
+        PriorityQueue<Map.Entry<Integer,Integer>>frequencyQueue=new PriorityQueue<>(
+            (a,b)->b.getValue().compareTo(a.getValue())
+        );
+        for(int i=0;i<nums.length;i++){
+            frequencyMap.merge(nums[i],1,Integer::sum);
+        }
+        frequencyQueue.addAll(frequencyMap.entrySet());
+            while(j!=k){
+                ans[j]=frequencyQueue.poll().getKey();
+                j++;
+            }
+            return ans;
+        }
+
+    }
+
+    //more optimized with min heap
+
+    import java.util.*;
+class Solution {
+    public int[] topKFrequent(int[] nums, int k) {
+      int[] ans=new int[k];
+      Map<Integer,Integer>frequencyMap=new HashMap<>();
+  PriorityQueue<Map.Entry<Integer, Integer>> frequencyQueue =
+    new PriorityQueue<>((a, b) -> Integer.compare(a.getValue(), b.getValue()));
+      for(int i:nums){
+        frequencyMap.merge(i,1,Integer::sum);
+      }
+      for(Map.Entry<Integer,Integer>entry:frequencyMap.entrySet()){
+        frequencyQueue.offer(entry);
+        while(frequencyQueue.size()>k){
+            frequencyQueue.poll();
+        }
+      }
+      int i = 0;
+        while (!frequencyQueue.isEmpty()) {
+            ans[i++] = frequencyQueue.poll().getKey();
+        }
+
+        return ans;
+    }
+    }

@@ -1,0 +1,55 @@
+//Kahn's algorithm // topological sort BFS // cycle detect BFS 
+
+
+class Solution {
+    List<Integer> [] graph;
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+       
+        //graph initilization
+        graph=new ArrayList[numCourses];
+        for(int i=0;i<numCourses;i++){
+            graph[i]=new ArrayList<>();
+        }
+
+        //graph populate
+        for(int []edge:prerequisites){
+            int u=edge[0];
+            int v=edge[1];
+            graph[v].add(u);
+        }
+
+        //topological Sort
+        return topoSort(numCourses);
+    }
+
+    private int [] topoSort(int numCourses){
+        int []indegree=new int[numCourses];
+
+        //calculate indegree for every course
+        for(int u=0;u<numCourses;u++){
+            for(int v:graph[u]){
+                indegree[v]++;
+            }
+        }
+
+        //add nodes with indegree 0 to graph
+        Queue<Integer>queue=new LinkedList<>();
+        for(int i=0;i<numCourses;i++){
+            if(indegree[i]==0) queue.add(i);
+        }
+
+        int []topoOrder=new int[numCourses];
+        int i=0;
+
+        // topological sort based on indegree when indegree is 0 for a node
+        while(!queue.isEmpty()){
+            int u=queue.poll();
+            topoOrder[i++]=u;
+            for(int v:graph[u]){
+                indegree[v]--;
+                if(indegree[v]==0) queue.add(v);
+            }
+        }
+        return numCourses==i?topoOrder:new int[0];
+    }
+}

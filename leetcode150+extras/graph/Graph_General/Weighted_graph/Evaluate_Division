@@ -1,0 +1,145 @@
+//polished and commented version
+
+class Solution {
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        // Build the graph using an adjacency list
+        Map<String, List<Pair<String, Double>>> graphMap = new HashMap<>();
+        double[] equationAnswer = new double[queries.size()];
+
+        // Construct the bidirectional weighted graph from input equations
+        for (int i = 0; i < equations.size(); i++) {
+            String a = equations.get(i).get(0);
+            String b = equations.get(i).get(1);
+            double val = values[i];
+
+            // a / b = val → a → b edge with weight val
+            graphMap.computeIfAbsent(a, k -> new ArrayList<>()).add(new Pair<>(b, val));
+
+            // b / a = 1/val → b → a edge with weight 1/val
+            graphMap.computeIfAbsent(b, k -> new ArrayList<>()).add(new Pair<>(a, 1.0 / val));
+        }
+
+        // Answer each query using BFS
+        for (int i = 0; i < queries.size(); i++) {
+            String start = queries.get(i).get(0);
+            String end = queries.get(i).get(1);
+            equationAnswer[i] = calculateEquation(start, end, graphMap);
+        }
+
+        return equationAnswer;
+    }
+
+    // Helper method to perform BFS and find product along path
+    private double calculateEquation(String startNode, String endNode, Map<String, List<Pair<String, Double>>> graphMap) {
+        // If either node is missing, result is -1.0
+        if (!graphMap.containsKey(startNode) || !graphMap.containsKey(endNode)) return -1.0;
+
+        // Same node query (e.g. a/a), return 1.0
+        if (startNode.equals(endNode)) return 1.0;
+
+        // Standard BFS setup
+        Queue<Pair<String, Double>> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+
+        // Start from startNode with initial value 1.0 (since a/a = 1.0)
+        queue.offer(new Pair<>(startNode, 1.0));
+        visited.add(startNode);
+
+        // BFS traversal to find a path from startNode to endNode
+        while (!queue.isEmpty()) {
+            Pair<String, Double> current = queue.poll();
+            String node = current.first;
+            double value = current.second;
+
+            // If we reach the target node, return the cumulative value
+            if (node.equals(endNode)) return value;
+
+            // Traverse all neighbors
+            for (Pair<String, Double> neighbor : graphMap.get(node)) {
+                if (!visited.contains(neighbor.first)) {
+                    visited.add(neighbor.first);
+                    // Multiply current value by edge weight to get new value
+                    queue.offer(new Pair<>(neighbor.first, value * neighbor.second));
+                }
+            }
+        }
+
+        // No valid path found
+        return -1.0;
+    }
+}
+
+// Simple generic Pair class to store (Node, Value) in graph
+class Pair<U, V> {
+    public U first;
+    public V second;
+
+    public Pair(U first, V second) {
+        this.first = first;
+        this.second = second;
+    }
+}
+
+
+
+
+
+class Solution {
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        Map<String,List<Pair>>graphMap=new HashMap<>();
+        double[] equationAnswer=new double[queries.size()];
+        List<Pair>pairList=new ArrayList<>();
+        for(int i=0;i<equations.size();i++){
+            List<String>equation=equations.get(i);
+            Pair firstPair=new Pair(equation.get(1),values[i]);
+            Pair secondPair=new Pair(equation.get(0),(double)1/values[i]);
+            graphMap.computeIfAbsent(equation.get(0),k->new ArrayList<>()).add(firstPair);
+             graphMap.computeIfAbsent(equation.get(1),k->new ArrayList<>()).add(secondPair);
+        }  
+       for(int i=0;i<queries.size();i++){
+            List<String>query=queries.get(i);
+            equationAnswer[i]=calculateEquation(query.get(0),query.get(1),graphMap);
+       }
+
+      return equationAnswer;
+    }
+
+    private double calculateEquation(String startNode,String endNode,Map<String,List<Pair>> graphMap){
+        if(!graphMap.containsKey(startNode) || !graphMap.containsKey(endNode)){
+            return Double.valueOf(-1);
+        }
+        Queue<Pair<String,Double>>queue=new LinkedList<>();
+        queue.offer(new Pair<>(startNode,1.00));
+        Set<String>visited=new HashSet<>();
+
+        while(!queue.isEmpty()){
+            Pair<String,Double>pair=queue.poll();
+            String node=pair.first;
+            double value=pair.second;
+
+            if(node.equals(endNode)) return value;
+
+            for(Pair<String,Double> neighbour:graphMap.get(node)){
+                if(!visited.contains(neighbour.first)){
+                    visited.add(String.valueOf(neighbour.first));
+                    queue.offer(new Pair<>(String.valueOf(neighbour.first),value*neighbour.second));
+                }
+            }
+        }
+
+        return Double.valueOf(-1);
+    }
+}
+
+  public class Pair<U,V>{
+        public U first;
+        public V second;
+
+        public Pair(U first,V second){
+            this.first=first;
+            this.second=second;
+        }
+    }
+
+
+

@@ -1,0 +1,109 @@
+class Solution {
+    static int []dr={-1,1,0,0};
+    static int []dc={0,0,-1,1};
+    public int countBattleships(char[][] board) {
+        int m=board.length;
+        int n=board[0].length;
+        int battleships=0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(board[i][j]=='X'){
+                    board[i][j]='.';
+                    battleships++;
+                    bfs(board,i,j,m,n);
+                }
+            }
+        }
+        return battleships;
+    }
+
+    public void bfs(char [][]board,int row,int col,int m,int n){
+        Queue<int[]>queue=new LinkedList<>();
+        queue.offer(new int[]{row,col});
+        while(!queue.isEmpty()){`
+            int []cell=queue.poll();
+            row=cell[0];
+            col=cell[1];
+            for(int i=0;i<4;i++){
+                int adjX=row+dr[i];
+                int adjY=col+dc[i];
+                if(adjX>=0 && adjX<m && adjY>=0 && adjY<n &&
+                board[adjX][adjY]=='X'){
+                    board[adjX][adjY]='.';
+                    queue.offer(new int[]{adjX,adjY});
+                }
+            }
+        }
+    }
+}
+
+
+//best optimized in 1 pass without modifying the array values
+
+class Solution {
+    public int countBattleships(char[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        int count = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] != 'X')
+                    continue;
+                if (i > 0 && board[i - 1][j] == 'X')
+                    continue; // part of vertical ship
+                if (j > 0 && board[i][j - 1] == 'X')
+                    continue; // part of horizontal ship
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+
+//DFS solution
+
+
+class Solution {
+    static int[] dr = {-1, 1, 0, 0};  // directions for row movement (up, down, left, right)
+    static int[] dc = {0, 0, -1, 1};  // directions for column movement
+
+    public int countBattleships(char[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        int battleships = 0;
+
+        // Iterate through the board
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // If we find an 'X', it's the start of a new battleship
+                if (board[i][j] == 'X') {
+                    battleships++;
+                    // Perform DFS to mark all connected 'X' cells
+                    dfs(board, i, j, m, n);
+                }
+            }
+        }
+
+        return battleships;
+    }
+
+    // DFS method to flood-fill the connected 'X' cells
+    public void dfs(char[][] board, int row, int col, int m, int n) {
+        // If the current cell is out of bounds or not an 'X', return
+        if (row < 0 || row >= m || col < 0 || col >= n || board[row][col] != 'X') {
+            return;
+        }
+
+        // Mark the current cell as visited by setting it to '.'
+        board[row][col] = '.';
+
+        // Explore all 4 possible directions (up, down, left, right)
+        for (int i = 0; i < 4; i++) {
+            int adjRow = row + dr[i];
+            int adjCol = col + dc[i];
+            dfs(board, adjRow, adjCol, m, n);
+        }
+    }
+}

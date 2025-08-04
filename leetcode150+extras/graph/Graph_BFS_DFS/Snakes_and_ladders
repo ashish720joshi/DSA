@@ -1,0 +1,105 @@
+class Solution {
+    public int snakesAndLadders(int[][] board) {
+        int m = board.length;
+        int[] boardFlattened = new int[m * m];
+        int steps = 0;
+        int k = 0;
+        boolean leftToRight = true;
+        for (int i = m - 1; i >= 0; i--) {
+            if (!leftToRight) {
+                for (int j = m - 1; j >= 0; j--) {
+                    boardFlattened[k] = board[i][j];
+                    k++;
+                }
+            } else {
+                for (int j = 0; j < m; j++) {
+                    boardFlattened[k] = board[i][j];
+                    k++;
+                }
+            }
+            leftToRight = !leftToRight;
+        }
+        boolean[] visited = new boolean[m * m];
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(0);
+        visited[0] = true;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int l = 0; l < size; l++) {
+                k = queue.poll();
+                if (k == m * m - 1)
+                    return steps;
+                for (int i = 1; i <= 6; i++) {
+                    int next = k + i;
+                    if (next < m * m) {
+                        int dest = boardFlattened[next] == -1 ? next : boardFlattened[next] - 1;
+                        if (!visited[dest]) {
+                            queue.offer(dest);
+                            visited[dest] = true;
+                        }
+                    }
+                }
+            }
+            steps++;
+        }
+        return -1;
+    }
+}
+
+
+/// DP solution for snakes and ladders(not good--don't use)
+
+
+import java.util.Arrays;
+
+class Solution {
+    public int snakesAndLadders(int[][] board) {
+        int m = board.length;
+        int n = m * m;
+        int[] boardFlattened = new int[n];
+        boolean leftToRight = true;
+        int idx = 0;
+
+        // Flatten the board into a 1D array
+        for (int i = m - 1; i >= 0; i--) {
+            if (leftToRight) {
+                for (int j = 0; j < m; j++) {
+                    boardFlattened[idx++] = board[i][j];
+                }
+            } else {
+                for (int j = m - 1; j >= 0; j--) {
+                    boardFlattened[idx++] = board[i][j];
+                }
+            }
+            leftToRight = !leftToRight;
+        }
+
+        int[] dp = new int[n];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;  // Starting cell requires 0 moves
+
+        // Relax transitions up to n times (Bellman-Ford)
+        for (int iter = 0; iter < n; iter++) {
+            boolean updated = false;
+            for (int i = 0; i < n; i++) {
+                if (dp[i] == Integer.MAX_VALUE) continue;
+
+                for (int dice = 1; dice <= 6; dice++) {
+                    int next = i + dice;
+                    if (next >= n) break;
+
+                    // If ladder or snake, move to the destination cell
+                    int dest = boardFlattened[next] == -1 ? next : boardFlattened[next] - 1;
+
+                    if (dp[i] + 1 < dp[dest]) {
+                        dp[dest] = dp[i] + 1;
+                        updated = true;
+                    }
+                }
+            }
+            if (!updated) break; // No changes, so stop early
+        }
+
+        return dp[n - 1] == Integer.MAX_VALUE ? -1 : dp[n - 1];
+    }
+}

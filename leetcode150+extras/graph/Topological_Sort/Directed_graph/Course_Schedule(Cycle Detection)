@@ -1,0 +1,48 @@
+//cycle detection in directed graph
+
+class Solution {
+    List<Integer>[] graph;
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        //graph initilization 
+
+        graph=new ArrayList[numCourses];
+        for(int i=0;i<numCourses;i++){
+            graph[i]=new ArrayList<>();
+        }
+
+        //graph populate
+        for(int []edge:prerequisites){
+            int u=edge[0];
+            int v=edge[1];
+            graph[u].add(v);
+        }
+
+        //dfs
+        boolean []visited=new boolean[numCourses];
+        boolean []onPath=new boolean[numCourses];
+        
+        for(int i=0;i<numCourses;i++){
+            if(!visited[i]){
+                if(hasCycle(i,-1,visited,onPath))
+                return false;
+            }
+          
+        }
+
+        return true;
+    }
+
+    private boolean hasCycle(int node,int parent,boolean []visited,boolean []onPath){
+        if(onPath[node]==true) return true;
+        onPath[node]=true;
+        visited[node]=true;
+        for(int neighbour:graph[node]){
+            if(!visited[neighbour]){
+                if(hasCycle(neighbour,node,visited,onPath)) return true;
+            }else if(onPath[neighbour]) return true;
+        }
+        onPath[node]=false;
+        return false;
+    }
+}

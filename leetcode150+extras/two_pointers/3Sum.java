@@ -1,3 +1,72 @@
+//medium optmized
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> ansList = new ArrayList<>();
+        Set<List<Integer>>set=new HashSet<>();
+        Arrays.sort(nums);
+
+        for (int i = 0; i < nums.length; i++) {
+            int j = i + 1;
+            int k=nums.length-1;
+
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+
+                if (sum == 0) {
+                    set.add(Arrays.asList(nums[i], nums[j], nums[k]));
+                    j++;
+                    k--;
+                } else if (sum < 0) {
+                    j++;
+                } else {
+                    k--;
+                }
+            }
+        }
+        ansList.addAll(set);
+        return ansList;
+    }
+}
+
+
+//best optimized
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> ansList = new ArrayList<>();
+        Arrays.sort(nums);
+
+        for (int i = 0; i < nums.length-2; i++) {
+            int j = i + 1;
+            int k=nums.length-1;
+            //checking duplicate elements for i
+            if(i>0 && nums[i]==nums[i-1]) continue;
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+
+                if (sum == 0) {
+                    ansList.add(Arrays.asList(nums[i], nums[j], nums[k]));
+                    j++;
+                    k--;
+                    //skipping duplicates elment by just checking previous for j and next for k as k stars from last
+                    while(j<k && nums[j]==nums[j-1]) j++;
+                    while(k>j && nums[k]==nums[k+1]) k--;
+                } else if (sum < 0) {
+                    j++;
+                } else {
+                    k--;
+                }
+            }
+        }
+        return ansList;
+    }
+}
+
+
+
+
+
 import java.util.*;
 class Solution {
     public List<List<Integer>> threeSum(int[] nums) {
@@ -33,86 +102,6 @@ class Solution {
             }
         }
         return ansList;
-    }
-}
-
-// medium optmized
-
-class Solution {
-    public List<List<Integer>> threeSum(int[] nums) {
-        int target = 0;
-        Arrays.sort(nums);
-        Set<List<Integer>> s = new HashSet<>();
-        List<List<Integer>> output = new ArrayList<>();
-        for (int i = 0; i < nums.length; i++){
-            int j = i + 1;
-            int k = nums.length - 1;
-            while (j < k) {
-                int sum = nums[i] + nums[j] + nums[k];
-                if (sum == target) {
-                    s.add(Arrays.asList(nums[i], nums[j], nums[k]));
-                    j++;
-                    k--;
-                } else if (sum < target) {
-                    j++;
-                } else {
-                    k--;
-                }
-            }
-        }
-        output.addAll(s);
-        return output;
-    }
-}
-
-//best optimized
-
-class Solution {
-    public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> ans = new ArrayList<>();
-
-        // Sort the array
-        Arrays.sort(nums);
-
-        for (int i = 0; i < nums.length - 2; i++) {
-            // Skip duplicate elements for i
-            if (i > 0 && nums[i] == nums[i - 1]) {
-                continue;
-            }
-
-            int j = i + 1;
-            int k = nums.length - 1;
-
-            while (j < k) {
-                int sum = nums[i] + nums[j] + nums[k];
-
-                if (sum == 0) {
-                    // Found a triplet with zero sum
-                    ans.add(Arrays.asList(nums[i], nums[j], nums[k]));
-
-                    // Skip duplicate elements for j
-                    while (j < k && nums[j] == nums[j + 1]) {
-                        j++;
-                    }
-
-                    // Skip duplicate elements for k
-                    while (j < k && nums[k] == nums[k - 1]) {
-                        k--;
-                    }
-
-                    // Move the pointers
-                    j++;
-                    k--;
-                } else if (sum < 0) {
-                    // Sum is less than zero, increment j to increase the sum
-                    j++;
-                } else {
-                    // Sum is greater than zero, decrement k to decrease the sum
-                    k--;
-                }
-            }
-        }
-        return ans;
     }
 }
 

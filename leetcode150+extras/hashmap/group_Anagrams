@@ -1,3 +1,23 @@
+// sorting of individual string and then add to map
+
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String,List<String>>anagramMap=new HashMap<>();
+        for(String s:strs){
+            char[]wordArray=s.toCharArray();
+            Arrays.sort(wordArray);
+            String word=new String(wordArray);
+            if(!anagramMap.containsKey(word)){
+                anagramMap.put(word,new ArrayList<>());
+            }
+            anagramMap.get(word).add(s);
+        }
+
+        return new ArrayList<>(anagramMap.values());
+    }
+}
+
+
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
         List<List<String>>outputList=new ArrayList<>();
@@ -21,28 +41,5 @@ class Solution {
             outputList.add(output);
         }
         return outputList;
-    }
-}
-
-//better phrasing
-
-
-class Solution {
-    public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String, List<String>> map = new HashMap<>();
-        
-        for (String word : strs) {
-            char[] chars = word.toCharArray();
-            Arrays.sort(chars);
-            String sortedWord = new String(chars);
-            
-            if (!map.containsKey(sortedWord)) {
-                map.put(sortedWord, new ArrayList<>());
-            }
-            
-            map.get(sortedWord).add(word);
-        }
-        
-        return new ArrayList<>(map.values());
     }
 }

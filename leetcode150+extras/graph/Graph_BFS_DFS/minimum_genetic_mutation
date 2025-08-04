@@ -1,0 +1,73 @@
+class Solution {
+    public int minMutation(String startGene, String endGene, String[] bank) {
+        // Convert the bank array to a set for O(1) lookup
+        Set<String> bankSet = new HashSet<>(Arrays.asList(bank));
+        
+        // Start mutation count from 0
+        int mutations = 0;
+
+        // Run BFS to find the shortest path (minimum mutations)
+        return bfs(startGene, endGene, bankSet, mutations);
+    }
+
+    private int bfs(String startGene, String endGene, Set<String> bankSet, int mutations) {
+        Queue<String> queue = new LinkedList<>();
+        Set<String> visited = new HashSet<>(); // To avoid cycles/repeats
+
+        mutations++; // First mutation level (startGene level is 0, next is 1)
+        queue.offer(startGene);
+
+        while (!queue.isEmpty()) {
+            int size = queue.size(); // Number of genes at current level
+
+            // Process all genes at the current mutation level
+            for (int i = 0; i < size; i++) {
+                String gene = queue.poll();
+
+                // Get all valid 1-letter mutations of this gene
+                for (String mutation : getMutatedGenes(gene, bankSet)) {
+                    // If we've reached the end gene, return the number of mutations
+                    if (mutation.equals(endGene)) return mutations;
+
+                    // Add unseen mutations to queue and mark them visited
+                    if (!visited.contains(mutation)) {
+                        visited.add(mutation);
+                        queue.offer(mutation);
+                    }
+                }
+            }
+
+            // Increment mutations count after exploring one level
+            mutations++;
+        }
+
+        // If no path leads to endGene, return -1
+        return -1;
+    }
+
+    // Generate all valid mutations (1 character change) that exist in bankSet
+    private List<String> getMutatedGenes(String gene, Set<String> bankSet) {
+        List<String> mutationList = new ArrayList<>();
+        char[] geneArray = gene.toCharArray();
+        char[] charLimit = {'A', 'C', 'G', 'T'}; // Valid gene characters
+
+        for (int i = 0; i < gene.length(); i++) {
+            char original = geneArray[i];
+
+            for (char c : charLimit) {
+                if (original == c) continue; // Skip same character
+
+                geneArray[i] = c;
+                String newGene = new String(geneArray);
+
+                if (bankSet.contains(newGene)) {
+                    mutationList.add(newGene);
+                }
+            }
+
+            geneArray[i] = original; // Restore the original character
+        }
+
+        return mutationList;
+    }
+}
