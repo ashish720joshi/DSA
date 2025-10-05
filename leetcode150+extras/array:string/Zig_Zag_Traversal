@@ -1,0 +1,27 @@
+class Solution {
+    public String convert(String s, int numRows) {
+        if(numRows==1) return s;
+        StringBuilder []rows=new StringBuilder[numRows];
+        for(int i=0;i<numRows;i++){
+            rows[i]=new StringBuilder();
+        }
+        StringBuilder convertedString=new StringBuilder();
+        int j=0;
+        boolean flip=false;
+        for(int i=0;i<s.length();i++){
+            rows[j].append(s.charAt(i));
+            if(!flip){
+                j++;
+                if(j==numRows-1) flip=true;
+            }else{
+                j--;
+                if(j==0) flip=false;
+            }
+        }
+
+        for(StringBuilder string:rows){
+            convertedString.append(string);
+        }
+        return convertedString.toString();
+    }
+}
